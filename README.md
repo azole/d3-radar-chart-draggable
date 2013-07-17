@@ -7,6 +7,5 @@ the nodes on radar chart are draggable
 
 references:
 
-	http://d3js.org/
-
-	https://github.com/alangrafu/radar-chart-d3
+http://d3js.org/
+https://github.com/alangrafu/radar-chart-d3
