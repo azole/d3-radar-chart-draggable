@@ -32,7 +32,7 @@ var RadarChart = {
     var tooltip;
 
     drawFrame();
-    var maxValues = [];
+    var maxAxisValues = []; // 儲存該坐標軸的最大 x, y
     drawAxis();
     var dataValues = [];
     reCalculatePoints();
@@ -63,12 +63,12 @@ var RadarChart = {
           .attr("x1", cfg.w/2)
           .attr("y1", cfg.h/2)
           .attr("x2", function(j, i){
-            maxValues[i] = {x:cfg.w/2*(1-cfg.factor*Math.sin(i*cfg.radians/total)), y:0};
-            return maxValues[i].x;
+            maxAxisValues[i] = {x:cfg.w/2*(1-cfg.factor*Math.sin(i*cfg.radians/total)), y:0};
+            return maxAxisValues[i].x;
           })
           .attr("y2", function(j, i){
-            maxValues[i].y = cfg.h/2*(1-cfg.factor*Math.cos(i*cfg.radians/total));
-            return maxValues[i].y;
+            maxAxisValues[i].y = cfg.h/2*(1-cfg.factor*Math.cos(i*cfg.radians/total));
+            return maxAxisValues[i].y;
           })
           .attr("class", "line").style("stroke", "grey").style("stroke-width", "1px");
 
@@ -167,12 +167,13 @@ var RadarChart = {
       var oldX = parseFloat(dragTarget.attr("cx")) - 300;
       var oldY = 300 - parseFloat(dragTarget.attr("cy"));
       var newY = 0, newX = 0, newValue = 0;
-      var maxX = maxValues[i].x - 300;
-      var maxY = 300 - maxValues[i].y;
+      var maxX = maxAxisValues[i].x - 300;
+      var maxY = 300 - maxAxisValues[i].y;
 
       // 斜率為無限大的特殊情況
       if(oldX == 0) {
         newY = oldY - d3.event.dy;
+        // 檢查是否超過範圍
         if(Math.abs(newY) > Math.abs(maxY)) {
           newY = maxY;
         }
@@ -182,6 +183,7 @@ var RadarChart = {
       {
         var slope = oldY / oldX;   // 斜率       
         newX = d3.event.dx + parseFloat(dragTarget.attr("cx")) - 300;
+        // 檢查是否超過範圍
         if(Math.abs(newX) > Math.abs(maxX)) {
           newX = maxX;
         }
